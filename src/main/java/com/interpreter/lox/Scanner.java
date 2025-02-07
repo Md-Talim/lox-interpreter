@@ -1,11 +1,13 @@
 package com.interpreter.lox;
 
-import java.util.*;
-
 import static com.interpreter.lox.TokenType.*;
 
-class Scanner {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+class Scanner {
     private final String source;
     private final List<Token> tokens = new ArrayList<>();
     private static final Map<String, TokenType> keywords;
@@ -125,9 +127,8 @@ class Scanner {
 
         String text = source.substring(start, current);
         TokenType type = keywords.get(text);
-        if (type == null) {
+        if (type == null)
             type = IDENTIFIER;
-        }
         addToken(type);
     }
 

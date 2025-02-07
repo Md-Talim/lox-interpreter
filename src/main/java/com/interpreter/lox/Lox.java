@@ -1,12 +1,14 @@
 package com.interpreter.lox;
 
-import java.io.*;
-import java.nio.charset.*;
-import java.nio.file.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 public class Lox {
-
     static boolean hadError = false;
 
     private static void report(int line, String where, String message) {
@@ -18,13 +20,28 @@ public class Lox {
         report(line, "", message);
     }
 
+    static void error(Token token, String message) {
+        if (token.type == TokenType.EOF) {
+            report(token.line, " at end", message);
+        } else {
+            report(token.line, " at '" + token.lexeme + "'", message);
+        }
+    }
+
     private static void run(String source) {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
+        Parser parser = new Parser(tokens);
+        Expr expression = parser.parse();
 
-        for (Token token : tokens) {
-            System.out.println(token);
-        }
+        if (hadError)
+            return;
+
+        System.out.println(new AstPrinter().print(expression));
+
+        // for (Token token : tokens) {
+        // System.out.println(token);
+        // }
     }
 
     private static void runPrompt() throws IOException {
