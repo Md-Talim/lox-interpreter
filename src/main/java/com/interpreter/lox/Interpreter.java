@@ -1,6 +1,8 @@
 package com.interpreter.lox;
 
-class Interpreter implements Expr.Visitor<Object> {
+import java.util.List;
+
+class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     private String stringify(Object object) {
         if (object == null)
             return "nil";
@@ -33,6 +35,10 @@ class Interpreter implements Expr.Visitor<Object> {
 
     private Object evaluate(Expr expr) {
         return expr.accept(this);
+    }
+
+    private void execute(Stmt stmt) {
+        stmt.accept(this);
     }
 
     private void checkNumberOperand(Token operator, Object operand) {
@@ -116,10 +122,24 @@ class Interpreter implements Expr.Visitor<Object> {
         }
     }
 
-    void interpret(Expr expresion) {
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
+    }
+
+    void interpret(List<Stmt> statements) {
         try {
-            Object value = evaluate(expresion);
-            System.out.println(stringify(value));
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
         } catch (RuntimeError error) {
             Lox.runtimeError(error);
         }
