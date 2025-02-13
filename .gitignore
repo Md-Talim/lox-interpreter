@@ -2,3 +2,4 @@ out/
 
 # Ignore target directory
 target/
+test.lox

@@ -60,6 +60,19 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
         return parenthesizeParts("var", stmt.name, "=", stmt.initializer);
     }
 
+    @Override
+    public String visitBlockStmt(Stmt.Block stmt) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(block ");
+
+        for (Stmt statement : stmt.statements) {
+            builder.append(statement.accept(this));
+        }
+
+        builder.append(")");
+        return builder.toString();
+    }
+
     private String parenthesizeExprs(String name, Expr... exprs) {
         StringBuilder builder = new StringBuilder();
 
