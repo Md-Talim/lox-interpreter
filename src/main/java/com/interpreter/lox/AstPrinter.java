@@ -2,8 +2,6 @@ package com.interpreter.lox;
 
 import java.util.List;
 
-import com.interpreter.lox.Stmt.If;
-
 class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     String print(Expr expr) {
         return expr.accept(this);
@@ -49,6 +47,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     }
 
     @Override
+    public String visitCallExpr(Expr.Call expr) {
+        return parenthesizeParts("call", expr.callee, expr.arguments);
+    }
+
+    @Override
     public String visitExpressionStmt(Stmt.Expression stmt) {
         return parenthesizeExprs(";", stmt.expression);
     }
@@ -81,7 +84,7 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     }
 
     @Override
-    public String visitIfStmt(If stmt) {
+    public String visitIfStmt(Stmt.If stmt) {
         if (stmt.elseBranch == null) {
             parenthesizeParts("if", stmt.condition, stmt.thenBranch);
         }
@@ -92,6 +95,27 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     @Override
     public String visitWhileStmt(Stmt.While stmt) {
         return parenthesizeParts("while", stmt.condition, stmt.body);
+    }
+
+    @Override
+    public String visitFunctionStmt(Stmt.Function stmt) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(fun " + stmt.name.lexeme + "(");
+
+        for (Token param : stmt.params) {
+            if (param != stmt.params.get(0))
+                builder.append(" ");
+            builder.append(param.lexeme);
+        }
+
+        builder.append(") ");
+
+        for (Stmt body : stmt.body) {
+            builder.append(body.accept(this));
+        }
+
+        builder.append(")");
+        return builder.toString();
     }
 
     private String parenthesizeExprs(String name, Expr... exprs) {
