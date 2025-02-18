@@ -2,6 +2,8 @@ package com.interpreter.lox;
 
 import java.util.List;
 
+import com.interpreter.lox.Stmt.Return;
+
 class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     String print(Expr expr) {
         return expr.accept(this);
@@ -59,6 +61,13 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     @Override
     public String visitPrintStmt(Stmt.Print stmt) {
         return parenthesizeExprs("print", stmt.expression);
+    }
+
+    @Override
+    public String visitReturnStmt(Return stmt) {
+        if (stmt.value == null)
+            return "(return)";
+        return parenthesizeExprs("return", stmt.value);
     }
 
     @Override
