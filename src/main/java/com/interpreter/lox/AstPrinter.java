@@ -2,6 +2,8 @@ package com.interpreter.lox;
 
 import java.util.List;
 
+import com.interpreter.lox.Stmt.If;
+
 class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     String print(Expr expr) {
         return expr.accept(this);
@@ -42,6 +44,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     }
 
     @Override
+    public String visitLogicalExpr(Expr.Logical expr) {
+        return parenthesizeExprs(expr.operator.lexeme, expr.left, expr.right);
+    }
+
+    @Override
     public String visitExpressionStmt(Stmt.Expression stmt) {
         return parenthesizeExprs(";", stmt.expression);
     }
@@ -71,6 +78,20 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
         builder.append(")");
         return builder.toString();
+    }
+
+    @Override
+    public String visitIfStmt(If stmt) {
+        if (stmt.elseBranch == null) {
+            parenthesizeParts("if", stmt.condition, stmt.thenBranch);
+        }
+
+        return parenthesizeParts("if-else", stmt.condition, stmt.thenBranch, stmt.elseBranch);
+    }
+
+    @Override
+    public String visitWhileStmt(Stmt.While stmt) {
+        return parenthesizeParts("while", stmt.condition, stmt.body);
     }
 
     private String parenthesizeExprs(String name, Expr... exprs) {
