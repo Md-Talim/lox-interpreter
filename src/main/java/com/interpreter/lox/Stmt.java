@@ -62,8 +62,8 @@ abstract class Stmt {
             return visitor.visitReturnStmt(this);
         }
 
-        Token keyword;
-        Expr value;
+        final Token keyword;
+        final Expr value;
     }
 
     static class Var extends Stmt {
@@ -138,9 +138,9 @@ abstract class Stmt {
             return visitor.visitFunctionStmt(this);
         }
 
-        Token name;
-        List<Token> params;
-        List<Stmt> body;
+        final Token name;
+        final List<Token> params;
+        final List<Stmt> body;
     }
 
     static class Class extends Stmt {
