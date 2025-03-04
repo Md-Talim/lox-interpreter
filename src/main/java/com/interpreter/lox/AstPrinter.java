@@ -9,6 +9,10 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
         return expr.accept(this);
     }
 
+    String print(Stmt stmt) {
+        return stmt.accept(this);
+    }
+
     @Override
     public String visitBinaryExpr(Expr.Binary expr) {
         return parenthesizeExprs(expr.operator.lexeme,
@@ -121,6 +125,23 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
         for (Stmt body : stmt.body) {
             builder.append(body.accept(this));
+        }
+
+        builder.append(")");
+        return builder.toString();
+    }
+
+    @Override
+    public String visitClassStmt(Stmt.Class stmt) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(class" + stmt.name.lexeme);
+
+        // if (stmt.superclass != null) {
+        // builder.append(" < " + print(stmt.superclass));
+        // }
+
+        for (Stmt.Function method : stmt.methods) {
+            builder.append(" " + print(method));
         }
 
         builder.append(")");
