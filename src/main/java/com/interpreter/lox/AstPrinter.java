@@ -2,6 +2,8 @@ package com.interpreter.lox;
 
 import java.util.List;
 
+import com.interpreter.lox.Expr.Get;
+import com.interpreter.lox.Expr.Set;
 import com.interpreter.lox.Stmt.Return;
 
 class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
@@ -146,6 +148,16 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
         builder.append(")");
         return builder.toString();
+    }
+
+    @Override
+    public String visitGetExpr(Get expr) {
+        return parenthesizeParts(".", expr.object, expr.name.lexeme);
+    }
+
+    @Override
+    public String visitSetExpr(Set expr) {
+        return parenthesizeParts("super", expr.object, expr.name.lexeme, expr.value);
     }
 
     private String parenthesizeExprs(String name, Expr... exprs) {
