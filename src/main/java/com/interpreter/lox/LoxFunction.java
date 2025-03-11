@@ -31,7 +31,7 @@ class LoxFunction implements LoxCallable {
 
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
-        Environment environment = new Environment(interpreter.globals);
+        Environment environment = new Environment(closure);
         for (int i = 0; i < declaration.params.size(); i++) {
             environment.define(declaration.params.get(i).lexeme, arguments.get(i));
         }
@@ -43,6 +43,9 @@ class LoxFunction implements LoxCallable {
                 return closure.getAt(0, "this");
             return returnValue.value;
         }
+
+        if (isInitializer)
+            return closure.getAt(0, "this");
 
         return null;
     }

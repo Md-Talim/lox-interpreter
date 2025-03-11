@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.interpreter.lox.Expr.Get;
 import com.interpreter.lox.Expr.Set;
+import com.interpreter.lox.Expr.Super;
 import com.interpreter.lox.Expr.This;
 import com.interpreter.lox.Stmt.Return;
 
@@ -139,9 +140,9 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
         StringBuilder builder = new StringBuilder();
         builder.append("(class" + stmt.name.lexeme);
 
-        // if (stmt.superclass != null) {
-        // builder.append(" < " + print(stmt.superclass));
-        // }
+        if (stmt.superclass != null) {
+            builder.append(" < " + print(stmt.superclass));
+        }
 
         for (Stmt.Function method : stmt.methods) {
             builder.append(" " + print(method));
@@ -159,6 +160,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     @Override
     public String visitSetExpr(Set expr) {
         return parenthesizeParts("super", expr.object, expr.name.lexeme, expr.value);
+    }
+
+    @Override
+    public String visitSuperExpr(Super expr) {
+        return parenthesizeParts("super", expr.method);
     }
 
     @Override
