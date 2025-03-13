@@ -3,3 +3,5 @@ out/
 # Ignore target directory
 target/
 test.lox
+.classpath
+.project
