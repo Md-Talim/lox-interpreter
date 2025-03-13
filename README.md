@@ -35,6 +35,39 @@ This project is an implementation of the Lox programming language interpreter, f
 - `src/main/java/com/interpreter/tool`: Contains tools for generating AST classes.
   - `GenerateAst.java`: Tool for generating AST classes.
 
+
+## Getting Started
+
+### Prerequisites
+
+- Java Development Kit (JDK) 23 or higher
+- Maven
+
+### Building the Project
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/Md-Talim/lox-interpreter.git
+   cd lox-interpreter
+   ```
+
+2. Build the project using Maven:
+   ```sh
+   mvn clean install
+   ```
+
+### Running the Interpreter
+
+To run the interpreter in interactive mode (REPL):
+```sh
+mvn exec:java -Dexec.mainClass="com.interpreter.lox.Lox"
+```
+
+To run a Lox script from a file:
+```sh
+mvn exec:java -Dexec.mainClass="com.interpreter.lox.Lox" -Dexec.args="test.lox"
+```
+
 ## Example
 
 Here is an example Lox script (`test.lox`):
